@@ -23,903 +23,628 @@
   --text: #e2e8f0;
   --text2: #94a3b8;
   --text3: #64748b;
-  --purple: #8b5cf6;
-  --cyan: #06b6d4;
+  --cyan: #22d3ee;
+  --glass: rgba(15, 21, 32, 0.85);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Lora',Georgia,serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(59,130,246,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(139,92,246,0.04) 0%,transparent 60%);pointer-events:none;z-index:0}
 
-/* ── HEADER ── */
-.header{position:sticky;top:0;z-index:100;background:rgba(8,12,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px}
-.header-inner{max-width:1000px;margin:0 auto;display:flex;flex-direction:column}
-.header-top{display:flex;align-items:center;gap:12px;padding:14px 0 10px}
-.header-icon{font-size:28px;line-height:1}
-.header-meta{flex:1}
-.header-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:3px}
-.header-title{font-family:'Syne',sans-serif;font-size:clamp(15px,3vw,22px);font-weight:800;color:var(--text);letter-spacing:-0.5px}
-.tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.5px}
-.tab:hover{color:var(--text2)}
-.tab.active{color:var(--accent2);border-bottom-color:var(--accent)}
-.badges{display:flex;gap:6px;padding:8px 0;flex-wrap:wrap}
-.badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);letter-spacing:.5px}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; line-height: 1.6; overflow-x: hidden; }
 
-/* ── LAYOUT ── */
-.main{max-width:1000px;margin:0 auto;padding:0 16px 60px;position:relative;z-index:1}
-.tab-panel{display:none;animation:fadeIn .3s ease}
-.tab-panel.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-/* ── SECTION HEADER ── */
-.section-hero{background:linear-gradient(135deg,#0d1a2e,#0f1520);border:1px solid var(--border2);border-radius:16px;padding:22px 24px;margin:24px 0 20px}
-.section-hero h2{font-family:'Syne',sans-serif;font-size:clamp(16px,3vw,22px);font-weight:800;color:var(--text);margin:0 0 6px}
-.section-hero p{font-size:13px;color:var(--text2);line-height:1.6;font-style:italic}
+/* Layout */
+.app-container { display: flex; min-height: 100vh; }
 
-/* ── NOTES LAYOUT ── */
-.notes-layout{display:flex;gap:20px;margin-top:24px;align-items:flex-start}
-.notes-sidebar{width:180px;flex-shrink:0;position:sticky;top:90px}
-.sidebar-inner{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;overflow:hidden}
-.sidebar-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;padding:0 6px;margin-bottom:10px}
-.sidebar-btn{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;background:none;border:1px solid transparent;color:var(--text3);cursor:pointer;font-size:12px;font-family:'JetBrains Mono',monospace;line-height:1.4;transition:all .2s;margin-bottom:3px}
-.sidebar-btn:hover{color:var(--text2);background:var(--bg3)}
-.sidebar-btn.active{background:#0e1e38;border-color:var(--accent);color:var(--accent2)}
-.sidebar-btn .s-emoji{font-size:14px;flex-shrink:0;margin-top:1px}
-.notes-content{flex:1;min-width:0}
+/* Sidebar Navigation */
+.sidebar {
+  width: 280px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 32px 24px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-/* ── NOTE BLOCKS ── */
-.note-section-title{font-family:'Syne',sans-serif;font-size:clamp(18px,3vw,24px);font-weight:800;color:var(--text);margin:0 0 20px;display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--border)}
-.block{margin-bottom:18px}
-.block-def{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 18px}
-.block-def .tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:6px}
-.block-def p{font-size:13.5px;color:#b8c8e8;line-height:1.85}
-.block-analogy{background:#0a1f14;border:1px solid #1a3828;border-radius:12px;padding:16px 18px}
-.block-analogy .atag{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;margin-bottom:8px;display:block}
-.block-analogy p{font-size:13px;color:#80c8a0;line-height:1.8}
-.block-diagram{background:#050a10;border:1px solid var(--border);border-radius:12px;padding:16px 18px;overflow:hidden}
-.block-diagram .dtag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;margin-bottom:10px}
-.block-diagram pre{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.5vw,12px);color:#a090e0;line-height:1.65;overflow-x:auto;white-space:pre}
-.block-keypoints{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
-.block-keypoints .ktag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.kpoint{display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.75}
-.kpoint .arrow{color:var(--accent);flex-shrink:0;margin-top:2px;font-size:11px}
-.kpoint strong{color:var(--text);font-style:normal}
-.block-timeline .tl-item{display:flex;gap:14px;margin-bottom:14px}
-.tl-era{flex-shrink:0;width:86px;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1a1020;border:1px solid #3a2060;color:var(--purple);border-radius:6px;padding:4px 8px;text-align:center;height:fit-content;margin-top:3px}
-.tl-body .tl-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
-.tl-body .tl-desc{font-size:12.5px;color:var(--text2);line-height:1.65}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-.os-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .2s}
-.os-card:hover{border-color:var(--border2)}
-.os-card .c-icon{font-size:22px;margin-bottom:8px}
-.os-card .c-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
-.os-card .c-desc{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:10px}
-.c-tags{display:flex;flex-wrap:wrap;gap:5px}
-.c-tag-pro{background:#0a2018;color:#4ade80;font-size:10px;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace}
-.c-tag-con{background:#200a0a;color:#f87171;font-size:10px;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace}
-.nav-btns{display:flex;justify-content:space-between;margin-top:24px;gap:10px}
-.nav-btn{font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px 20px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .2s}
-.nav-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--accent)}
+.logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+.logo-icon { 
+  width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--cyan)); 
+  border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: white;
+}
+.logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
 
-/* ── REVISION ── */
-.rev-card{border-radius:12px;padding:18px 20px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06)}
-.rev-card h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px}
-.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px}
-.rev-point{display:flex;gap:8px;font-size:13px;color:var(--text2);line-height:1.65}
-.rev-arrow{color:var(--accent);flex-shrink:0;font-size:11px;margin-top:3px}
+.nav-section { margin-bottom: 32px; }
+.nav-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; display: block; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px;
+  color: var(--text2); text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.2s; cursor: pointer; margin-bottom: 4px;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
 
-/* ── Q&A ── */
-.qa-item{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .2s;cursor:pointer}
-.qa-item:hover{border-color:var(--border2)}
-.qa-item.open{border-color:var(--accent)}
-.qa-header{display:flex;align-items:flex-start;gap:10px;padding:14px 18px}
-.qa-num{background:#0e1e38;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;flex-shrink:0;margin-top:2px}
-.qa-q{font-size:13.5px;font-weight:500;color:var(--text);flex:1;line-height:1.55}
-.qa-chevron{color:var(--text3);font-size:16px;flex-shrink:0;transition:transform .25s;margin-top:1px}
-.qa-item.open .qa-chevron{transform:rotate(180deg)}
-.qa-answer{display:none;padding:0 18px 14px 18px}
-.qa-answer-inner{background:#050a10;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 14px;font-size:13px;color:#a0b0d0;line-height:1.8}
+/* Main Content Area */
+.main-content { flex: 1; padding: 48px 60px; max-width: 1100px; margin: 0 auto; }
 
-/* ── MCQ ── */
-.mcq-set-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.mcq-set-tab{font-family:'JetBrains Mono',monospace;font-size:12px;padding:8px 16px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text3);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
-.mcq-set-tab:hover{border-color:var(--border2);color:var(--text2)}
-.mcq-set-tab.active{background:#0e1e38;border-color:var(--accent);color:var(--accent2)}
-.mcq-set-panel{display:none}
-.mcq-set-panel.active{display:block}
-.mcq-meta{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.mcq-meta-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
-.mcq-meta-progress{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text3)}
-.mcq-q-block{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;transition:border-color .2s}
-.mcq-q-block.correct{border-color:var(--green)}
-.mcq-q-block.wrong{border-color:var(--red)}
-.mcq-q-header{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
-.mcq-q-num{background:#0e1e38;color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;flex-shrink:0;margin-top:2px}
-.mcq-q-text{font-size:14px;color:var(--text);font-weight:500;line-height:1.55;flex:1}
-.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-@media(max-width:540px){.options-grid{grid-template-columns:1fr}}
-.option-btn{text-align:left;padding:10px 13px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:12.5px;line-height:1.45;display:flex;gap:8px;align-items:flex-start;transition:all .15s;font-family:'Lora',serif}
-.option-btn:hover:not([disabled]){background:var(--bg3);border-color:var(--border2);color:var(--text)}
-.option-btn.selected{background:#0e1e38;border-color:var(--accent);color:var(--accent2)}
-.option-btn.correct-ans{background:#061a0e;border-color:var(--green);color:#4ade80}
-.option-btn.wrong-ans{background:#1a0606;border-color:var(--red);color:#f87171}
-.option-btn .opt-letter{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;color:var(--text3)}
-.option-btn.selected .opt-letter,.option-btn.correct-ans .opt-letter,.option-btn.wrong-ans .opt-letter{color:inherit}
-.submit-btn{width:100%;padding:14px;border-radius:10px;background:linear-gradient(135deg,#1d4ed8,#1e40af);border:1px solid #3b82f6;color:#fff;cursor:pointer;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;transition:all .2s;margin-top:8px;letter-spacing:.3px}
-.submit-btn:hover{background:linear-gradient(135deg,#2563eb,#1d4ed8);transform:translateY(-1px)}
-.submit-btn:disabled{background:var(--bg3);border-color:var(--border);color:var(--text3);cursor:not-allowed;transform:none}
-.score-box{border-radius:14px;padding:24px;text-align:center;margin-top:8px;border:1px solid}
-.score-box.pass{background:#061a0e;border-color:var(--green)}
-.score-box.avg{background:#1a1400;border-color:var(--gold)}
-.score-box.fail{background:#1a0606;border-color:var(--red)}
-.score-emoji{font-size:44px;margin-bottom:10px}
-.score-pct{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;margin-bottom:6px}
-.score-box.pass .score-pct{color:var(--green)}
-.score-box.avg .score-pct{color:var(--gold)}
-.score-box.fail .score-pct{color:var(--red)}
-.score-msg{font-size:13px;color:var(--text2)}
-.score-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 10px;border-radius:12px;margin-top:8px}
-.score-box.pass .score-tag{background:#0a2e18;color:#4ade80}
-.score-box.avg .score-tag{background:#2a2000;color:var(--gold2)}
-.score-box.fail .score-tag{background:#2e0a0a;color:#f87171}
+header { margin-bottom: 60px; }
+.chapter-badge { display: inline-block; padding: 6px 12px; background: rgba(59, 130, 246, 0.1); color: var(--accent2); border-radius: 6px; font-size: 12px; font-weight: 700; margin-bottom: 16px; }
+h1 { font-size: 48px; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
+.header-meta { font-size: 16px; color: var(--text2); font-family: 'Lora', serif; font-style: italic; }
 
-/* ── DASHBOARD ── */
-.dash-empty{text-align:center;padding:60px 20px}
-.dash-empty-icon{font-size:60px;margin-bottom:16px}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
-.stat-icon{font-size:24px;margin-bottom:8px}
-.stat-val{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:4px}
-.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.5px}
-.charts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px}
-.chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-.chart-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px}
-.insights-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-.insight-item{display:flex;gap:10px;font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:6px;line-height:1.6}
+/* Sections */
+.content-view { display: none; animation: fadeIn 0.4s ease-out forwards; }
+.content-view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ── PROGRESS BAR ── */
-.progress-wrap{background:var(--bg3);border-radius:4px;height:4px;overflow:hidden;margin:6px 0}
-.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .6s ease}
+/* Cards & Components */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 32px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; position: relative; transition: 0.3s; }
+.card:hover { border-color: var(--border2); transform: translateY(-4px); }
 
-/* ── UTIL ── */
-.spacer{height:1px}
-@media(max-width:640px){
-  .notes-layout{flex-direction:column}
-  .notes-sidebar{width:100%;position:static}
-  .sidebar-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-  .sidebar-label{display:none}
-  .sidebar-btn{text-align:center;flex-direction:column;align-items:center;gap:3px;font-size:10px;padding:6px 4px}
+.card-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.card-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: var(--bg3); }
+
+.detail-p { font-family: 'Lora', serif; font-size: 17px; color: var(--text2); margin-bottom: 20px; }
+.concept-tag { display: inline-block; padding: 4px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; font-size: 11px; font-family: 'JetBrains Mono'; margin-right: 8px; margin-bottom: 8px; }
+
+/* Dashboard Styling */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); padding: 24px; border-radius: 16px; text-align: center; }
+.stat-val { font-size: 28px; font-weight: 800; display: block; }
+.stat-label { font-size: 12px; color: var(--text3); font-weight: 700; text-transform: uppercase; }
+
+.dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+.insight-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
+.insight-item { display: flex; align-items: flex-start; gap: 16px; padding: 16px; border-radius: 12px; margin-bottom: 12px; font-size: 14px; font-weight: 500; }
+
+/* MCQs Styling */
+.mcq-tabs { display: flex; gap: 12px; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+.mcq-tab { 
+  padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); 
+  font-weight: 700; cursor: pointer; transition: 0.2s; 
+}
+.mcq-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+.mcq-container { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 40px; }
+.mcq-question { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px dashed var(--border); }
+.mcq-text { font-size: 19px; font-weight: 700; margin-bottom: 24px; display: flex; gap: 16px; }
+.mcq-num { color: var(--accent2); font-family: 'JetBrains Mono'; }
+.mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.mcq-opt { 
+  padding: 16px 20px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; 
+  cursor: pointer; text-align: left; font-size: 15px; font-weight: 500; color: var(--text2); transition: 0.2s;
+  display: flex; align-items: center; gap: 12px;
+}
+.mcq-opt:hover { border-color: var(--accent); color: var(--text); }
+.mcq-opt.selected { background: rgba(59, 130, 246, 0.15); border-color: var(--accent); color: var(--accent2); }
+
+.mcq-opt.correct-ans { background: rgba(16, 185, 129, 0.15) !important; border-color: var(--green) !important; color: #4ade80 !important; }
+.mcq-opt.wrong-ans { background: rgba(239, 68, 68, 0.15) !important; border-color: var(--red) !important; color: #f87171 !important; }
+.mcq-question.correct { border-left: 4px solid var(--green); padding-left: 20px; }
+.mcq-question.wrong { border-left: 4px solid var(--red); padding-left: 20px; }
+
+.submit-btn { 
+  width: 100%; padding: 20px; background: var(--accent); color: white; border-radius: 12px; border: none;
+  font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 20px;
+}
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); }
+
+.score-box { text-align: center; padding: 40px; border-radius: 20px; margin-top: 24px; animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.score-box.pass { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--green); }
+.score-box.avg { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); }
+.score-box.fail { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--red); }
+.score-emoji { font-size: 48px; margin-bottom: 16px; }
+.score-pct { font-size: 56px; font-weight: 800; margin-bottom: 8px; }
+.score-tag { display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 12px; letter-spacing: 1px; }
+
+@keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .sidebar { width: 80px; padding: 32px 16px; }
+  .logo-text, .nav-item span, .nav-label { display: none; }
+  .main-content { padding: 32px 24px; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .mcq-options { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="header-inner">
-    <div class="header-top">
-      <div class="header-icon">🖥️</div>
-      <div class="header-meta">
-        <div class="header-sub">B.Tech — Operating Systems</div>
-        <div class="header-title">Chapter 1: Introduction to Operating Systems</div>
+<div class="app-container">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon">OS</div>
+      <div class="logo-text">OS-EXPLORER</div>
+    </div>
+
+    <nav class="nav-section">
+      <span class="nav-label">Main Menu</span>
+      <div class="nav-item active" onclick="showView('dashboard')">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        <span>Performance</span>
+      </div>
+      <div class="nav-item" onclick="showView('notes')">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20m-16 2.5V3.5A2.5 2.5 0 016.5 1H20v18.5H6.5a2.5 2.5 0 01-2.5-2.5z"/></svg>
+        <span>Detailed Notes</span>
+      </div>
+      <div class="nav-item" onclick="showView('mcqs')">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4m-2 6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h9"/></svg>
+        <span>Practice MCQs</span>
+      </div>
+    </nav>
+
+    <div style="margin-top:auto">
+      <div class="nav-item" onclick="resetProgress()" style="color:var(--red)">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        <span>Reset Progress</span>
       </div>
     </div>
-    <div class="tabs" id="mainTabs">
-      <button class="tab active" data-panel="notes">📖 Detailed Notes</button>
-      <button class="tab" data-panel="revision">⚡ Quick Revision</button>
-      <button class="tab" data-panel="qa">❓ Q&A (25)</button>
-      <button class="tab" data-panel="mcq">📝 MCQs (60)</button>
-      <button class="tab" data-panel="dashboard">📊 Dashboard</button>
-    </div>
-  </div>
-</div>
+  </aside>
 
-<div class="main">
+  <main class="main-content">
+    <header>
+      <span class="chapter-badge">Chapter 1</span>
+      <h1>Introduction to Operating Systems</h1>
+      <p class="header-meta">Exploration of OS objectives, types, architectures, and operations.</p>
+    </header>
 
-<!-- ═══════════════ NOTES ═══════════════ -->
-<div class="tab-panel active" id="panel-notes">
-  <div class="notes-layout">
-    <div class="notes-sidebar">
-      <div class="sidebar-inner" id="sidebarBtns">
-        <div class="sidebar-label">Sections</div>
+    <section id="view-dashboard" class="content-view active">
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-val" id="stat-avg">0%</span>
+          <span class="stat-label">Avg. Score</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-sets">0/3</span>
+          <span class="stat-label">Sets Done</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-total">0</span>
+          <span class="stat-label">Total Qs</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-rank">N/A</span>
+          <span class="stat-label">Status</span>
+        </div>
       </div>
-    </div>
-    <div class="notes-content" id="notesContent"></div>
-  </div>
-</div>
 
-<!-- ═══════════════ REVISION ═══════════════ -->
-<div class="tab-panel" id="panel-revision">
-  <div class="section-hero">
-    <h2>⚡ Quick Revision — Chapter 1</h2>
-    <p>All essential concepts at a glance. Perfect for last-minute exam review.</p>
-  </div>
-  <div id="revisionContent"></div>
-</div>
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-title">Performance Radar</div>
+          <div style="height:350px"><canvas id="scoreChart"></canvas></div>
+        </div>
+        <div class="insight-panel">
+          <div class="card-title">Learning Insights</div>
+          <div id="insight-container">
+            <div style="text-align:center; padding:40px; color:var(--text3)">
+              Complete at least one MCQ set to see personalized feedback here.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<!-- ═══════════════ Q&A ═══════════════ -->
-<div class="tab-panel" id="panel-qa">
-  <div class="section-hero">
-    <h2>❓ Short Answer Questions</h2>
-    <p>25 questions covering all Chapter 1 concepts. Click any question to reveal the answer.</p>
-  </div>
-  <div id="qaContent"></div>
-</div>
+    <section id="view-notes" class="content-view">
+      <div class="grid" id="notes-grid"></div>
+    </section>
 
-<!-- ═══════════════ MCQ ═══════════════ -->
-<div class="tab-panel" id="panel-mcq">
-  <div class="section-hero">
-    <h2>📝 MCQ Practice — 60 Questions</h2>
-    <p>3 sets × 20 questions. Answer all, then submit each set to see your score and unlock the Dashboard.</p>
-  </div>
-  <div class="mcq-set-tabs" id="mcqSetTabs"></div>
-  <div id="mcqContent"></div>
+    <section id="view-mcqs" class="content-view">
+      <div class="mcq-tabs" id="mcq-tab-list"></div>
+      <div id="mcq-content-area"></div>
+    </section>
+  </main>
 </div>
-
-<!-- ═══════════════ DASHBOARD ═══════════════ -->
-<div class="tab-panel" id="panel-dashboard">
-  <div class="section-hero">
-    <h2>📊 Performance Dashboard</h2>
-    <p>Your MCQ performance insights with charts and personalized recommendations.</p>
-  </div>
-  <div id="dashContent"></div>
-</div>
-
-</div><!-- /main -->
 
 <script>
-// ═══════════════════════════════════════════════
-//  DATA
-// ═══════════════════════════════════════════════
-
-const NOTES = [
+// DATA: CHAPTER 1 NOTES
+const NOTES_DATA = [
   {
-    id:"intro", emoji:"🖥️", title:"1.1 What is an Operating System?",
-    blocks:[
-      {type:"def", text:"An Operating System (OS) is system software that acts as an intermediary between computer hardware and the user. It manages hardware resources and provides services for application programs. The Kernel is its core that always resides in memory."},
-      {type:"analogy", title:"🏨 The Hotel Manager Analogy", text:"Think of the OS as a hotel manager. The hotel (hardware: CPU, RAM, disk) has many resources. Guests (programs/users) want rooms (memory), electricity (CPU time), and services (I/O). Without a manager, guests would fight over rooms, steal towels, and chaos would reign. The OS IS that manager — allocating resources fairly, ensuring no guest disturbs others, and handling complaints (errors)."},
-      {type:"diagram", title:"Layered View of a Computer System", code:`
-  ┌──────────────────────────────────────────┐
-  │          USERS / APPLICATIONS            │  ← Top Layer
-  │    (Chrome, VS Code, Games, Word)        │
-  ├──────────────────────────────────────────┤
-  │          OPERATING  SYSTEM               │  ← Manages Everything
-  │   (Windows, Linux, macOS, Android)       │
-  ├──────────────────────────────────────────┤
-  │              HARDWARE                    │  ← Bottom Layer
-  │       (CPU, RAM, Disk, Keyboard)         │
-  └──────────────────────────────────────────┘`},
-      {type:"keypoints", title:"Key Roles of an OS", points:[
-        ["Resource Allocator","Decides who gets CPU time, memory, and I/O devices among competing programs"],
-        ["Control Program","Prevents errors and improper use by managing execution of user programs"],
-        ["Kernel","The one program always running in memory — the heart of the OS"],
-        ["Interface Provider","Offers GUI (graphical) or CLI (command-line) interface to users"]
-      ]}
-    ]
+    title: "OS Fundamentals",
+    desc: "An Operating System (OS) is a software that acts as an intermediary between computer hardware and the user.",
+    concepts: ["Resource Allocator", "Control Program", "Intermediary"],
+    details: "Primary goals: Convenience for users, efficiency of hardware, and ability to execute user programs and solve problems easily."
   },
   {
-    id:"history", emoji:"📜", title:"1.2 History & Evolution of OS",
-    blocks:[
-      {type:"timeline", title:"Evolution of Operating Systems", items:[
-        {era:"1940s–50s", name:"No OS (Bare Metal)", desc:"Programs ran directly on hardware via punch cards. One job at a time, manually loaded. CPU mostly idle. No protection, no multitasking."},
-        {era:"1955–65", name:"Batch Systems", desc:"Jobs batched together and processed sequentially. Monitor programs automated job sequencing. Still — CPU idles whenever waiting for I/O devices."},
-        {era:"1965–80", name:"Multiprogramming & Time-Sharing", desc:"Multiple jobs in memory simultaneously. CPU switches to another job on I/O wait. UNIX born in this era! First interactive terminals."},
-        {era:"1980s", name:"Personal Computers", desc:"MS-DOS, then Windows & Mac OS. Single-user but feature-rich. GUI introduced — making computers accessible to everyone."},
-        {era:"1990s–Now", name:"Modern OS", desc:"Linux, Windows NT, macOS X, Android, iOS. Multithreading, networking, security, virtualization, cloud computing, containers."}
-      ]},
-      {type:"analogy", title:"🏭 The Car Factory Analogy (Batch vs Multiprogramming)", text:"Batch = Old factory: build one car completely before starting the next. Multiprogramming = Modern factory: while one car's paint is drying (I/O wait), workers begin welding the next frame (CPU busy with another job). Result: dramatically higher throughput and efficiency!"},
-      {type:"keypoints", title:"Why Each Evolution Was Needed", points:[
-        ["Problem with No OS","Expensive hardware sat idle most of the time. Human operators wasted time manually loading each job."],
-        ["Problem with Batch","CPU still idle during I/O operations. No interaction possible. Jobs might run for hours with no feedback."],
-        ["Problem solved by Multiprogramming","CPU always busy. One job's I/O wait = another job's CPU time. Throughput skyrocketed."],
-        ["Problem solved by Time-Sharing","Multiple users on one machine interactively. Each gets the illusion of a dedicated computer via rapid CPU switching."]
-      ]}
-    ]
+    title: "Operating System Types",
+    desc: "Evolution of OS from simple batch systems to complex real-time environments.",
+    concepts: ["Batch", "Multi-programmed", "Time-shared", "Real-time"],
+    details: "Batch: Jobs grouped with similar needs. Multi-programmed: Keeps CPU busy by switching between jobs. Time-shared: Logical extension where CPU switches jobs so frequently users can interact."
   },
   {
-    id:"types", emoji:"🗂️", title:"1.3 Types of Operating Systems",
-    blocks:[
-      {type:"cards", title:"6 Major OS Types", items:[
-        {icon:"📦",name:"Batch OS",desc:"Groups similar jobs and processes them without user interaction. Used in banks for payroll, in scientific computing for simulations.",pro:"Efficient CPU use, high throughput",con:"No real-time interaction"},
-        {icon:"⏱️",name:"Time-Sharing OS",desc:"Multiple users share CPU time via rapid switching (time slices). Each user feels they have a dedicated machine. Example: early UNIX, mainframes.",pro:"Interactive, fair multi-user",con:"Security & synchronization challenges"},
-        {icon:"⚡",name:"Real-Time OS (RTOS)",desc:"Guarantees response within strict time deadlines. Hard RTOS: miss deadline = failure (airbag, pacemaker). Soft RTOS: delay tolerable (streaming).",pro:"Predictable, guaranteed response",con:"Limited multitasking capability"},
-        {icon:"🌐",name:"Distributed OS",desc:"Manages a network of independent computers appearing as one system. Transparent to users. Examples: Google's servers, Hadoop clusters.",pro:"Resource sharing, fault tolerance",con:"Complex communication protocols"},
-        {icon:"🔗",name:"Network OS",desc:"Provides file sharing and printer sharing over a LAN. Users ARE aware of multiple machines (unlike distributed OS). Example: Windows Server, Novell NetWare.",pro:"Simple to implement",con:"Not transparent, user manages machines"},
-        {icon:"📱",name:"Mobile OS",desc:"Designed for smartphones and tablets. Optimized for battery life, touch input, sensors, app stores. Examples: Android (Linux-based), iOS.",pro:"Power efficient, touch-friendly",con:"Limited vs desktop capabilities"}
-      ]},
-      {type:"diagram", title:"Response Time Comparison Across OS Types", code:`
-    Batch OS:     [JOB1][JOB2][JOB3]──────────────► Hours
-    
-    Time-Share:   [J1][J2][J3][J1][J2]─────────────► Seconds
-                   └── rapid switching feels simultaneous
-    
-    RTOS Hard:    [J]◄─────────────────────────────── Microseconds
-                   └── MUST respond THIS fast or system fails!
-    
-    Mobile OS:    Optimized for low power + instant touch response`},
-    ]
+    title: "Kernel Architectures",
+    desc: "The core part of OS managing hardware communications and system resources.",
+    concepts: ["Monolithic", "Microkernel", "Exokernel"],
+    details: "Monolithic: Entire OS in kernel space. Microkernel: Minimalist approach, moves non-essential components to user space for better reliability and security."
   },
   {
-    id:"structure", emoji:"🏗️", title:"1.4 OS Structure & Components",
-    blocks:[
-      {type:"def", text:"An OS is made up of several cooperating components. Understanding these components helps you see how the OS manages processes, memory, files, and devices — all simultaneously — without conflicts."},
-      {type:"diagram", title:"The 5 Core Components of an OS", code:`
-  ┌─────────────────────────────────────────────────────┐
-  │                 OPERATING SYSTEM                     │
-  │                                                      │
-  │  ┌─────────────────┐    ┌─────────────────────────┐ │
-  │  │ PROCESS MANAGER │    │    MEMORY MANAGER        │ │
-  │  │ create/schedule │    │  RAM allocation, virtual │ │
-  │  │ terminate procs │    │  memory, paging          │ │
-  │  └─────────────────┘    └─────────────────────────┘ │
-  │                                                      │
-  │  ┌─────────────────┐    ┌─────────────────────────┐ │
-  │  │  FILE SYSTEM    │    │    I/O SUBSYSTEM         │ │
-  │  │  dirs, perms,   │    │  device drivers, buffers │ │
-  │  │  storage mgmt   │    │  caches, DMA, interrupts │ │
-  │  └─────────────────┘    └─────────────────────────┘ │
-  │                                                      │
-  │  ┌──────────────────────────────────────────────────┐│
-  │  │        SECURITY & PROTECTION MODULE               ││
-  │  │   Authentication (who?) + Authorization (what?)  ││
-  │  └──────────────────────────────────────────────────┘│
-  └─────────────────────────────────────────────────────┘`},
-      {type:"keypoints", title:"Deep Dive: Each Component", points:[
-        ["Process Manager","Creates, schedules (FCFS, SJF, Round-Robin), and terminates processes. Handles deadlocks and inter-process communication (IPC)."],
-        ["Memory Manager","Tracks which memory bytes are used or free. Allocates/deallocates RAM. Implements virtual memory so programs can use more memory than physically available."],
-        ["File System","Organizes files into directories. Controls read/write/execute permissions. Manages hard disks, SSDs, USB drives as abstracted file systems."],
-        ["I/O Subsystem","Uses device drivers to abstract hardware specifics. Manages buffers (temporary storage) and caches (speed optimization). Handles Direct Memory Access (DMA)."],
-        ["Security/Protection","Controls which users/programs can access which resources. Authentication = verifying identity. Authorization = checking permissions."]
-      ]}
-    ]
-  },
-  {
-    id:"kernel", emoji:"⚙️", title:"1.5 Kernel & OS Architectures",
-    blocks:[
-      {type:"def", text:"The Kernel is the innermost layer of the OS that always stays in memory. It has direct, privileged access to hardware. All OS operations funnel through the kernel, which runs in a special CPU mode with unrestricted hardware access."},
-      {type:"analogy", title:"🏛️ The Government Analogy", text:"The Kernel is like the government. Citizens (user programs) cannot directly build roads or control utilities (access hardware). They must apply through government agencies (system calls). The government processes requests, controls access to shared infrastructure, and prevents any one citizen from monopolizing resources or causing chaos."},
-      {type:"cards", title:"4 Kernel Architecture Types", items:[
-        {icon:"🧱",name:"Monolithic Kernel",desc:"Entire OS (file system, drivers, scheduler, memory) runs as one large program in kernel mode. All components directly call each other — very fast. Examples: Linux, original Unix.",pro:"Extremely fast internal communication",con:"One bug in any module can crash everything"},
-        {icon:"🔬",name:"Microkernel",desc:"Only absolute essentials in kernel (IPC, basic scheduling, minimal memory management). Everything else — file systems, drivers — runs in user space as separate server processes. Examples: Mach, QNX, Minix.",pro:"Highly stable, modular, easier to extend",con:"Slower due to message passing overhead"},
-        {icon:"🔀",name:"Hybrid Kernel",desc:"Combines monolithic speed for performance-critical parts with microkernel modularity for drivers and file systems. Pragmatic 'best of both worlds.' Examples: Windows NT, macOS XNU.",pro:"Balance of performance and modularity",con:"More complex design and implementation"},
-        {icon:"🧪",name:"Exokernel",desc:"Extremely minimal — just multiplexes hardware resources securely. Applications manage their own resources directly without OS abstractions. Mostly research-oriented.",pro:"Maximum application control and performance",con:"Very complex application development"}
-      ]},
-      {type:"diagram", title:"Monolithic vs Microkernel Architecture", code:`
-  MONOLITHIC KERNEL:            MICROKERNEL:
-  ┌───────────────────┐         ┌───────────────────────┐
-  │   USER PROCESSES  │         │     USER PROCESSES    │
-  ├───────────────────┤         │   + File Server       │
-  │  ┌─────────────┐  │         │   + Driver Server     │
-  │  │ File System │  │         │   + Network Server    │
-  │  │   Drivers   │  │         ├───────────────────────┤
-  │  │ Memory Mgr  │  │         │  TINY KERNEL:         │
-  │  │  Scheduler  │  │         │  ▸ IPC (messaging)    │
-  │  │  Networking │  │         │  ▸ Basic scheduling   │
-  │  └─────────────┘  │         │  ▸ Minimal memory     │
-  │   ONE BIG KERNEL  │         └───────────────────────┘
-  └───────────────────┘         Services communicate via
-  All in privileged space        user-space message passing`}
-    ]
-  },
-  {
-    id:"syscalls", emoji:"📞", title:"1.6 System Calls & Dual-Mode Operation",
-    blocks:[
-      {type:"def", text:"A System Call is the programmatic mechanism by which a user-space program requests a privileged service from the OS kernel. It is the ONLY legitimate gateway between user space and kernel space — ensuring hardware is never directly accessed by untrusted code."},
-      {type:"analogy", title:"🏦 The Bank Teller Analogy", text:"You (user program) cannot walk into the bank vault (hardware) directly — security prevents this. You fill out a withdrawal form (system call) and hand it to the teller (OS kernel). The teller verifies your request, accesses the vault on your behalf, and returns your money (result). You never touch the vault. This protects the bank (system) from unauthorized access!"},
-      {type:"diagram", title:"System Call Flow & Dual-Mode Operation", code:`
-User Program                         OS Kernel
-    │                                     │
-    │   fd = open("file.txt", O_RDONLY)   │
-    │                                     │
-    │──── TRAP instruction ──────────────►│
-    │      (software interrupt)           │  MODE: User(1) → Kernel(0)
-    │                                ┌────┴──────┐
-    │                                │  Syscall  │
-    │                                │ Handler   │
-    │                                │  #5(open) │
-    │                                └────┬──────┘
-    │                                     │ (accesses hardware/disk)
-    │◄──── return file descriptor ────────│
-    │       fd = 3  ✓                     │  MODE: Kernel(0) → User(1)
-    │                                     │
-  
-  ┌────────────────────────────────────────────────────┐
-  │              CPU DUAL-MODE OPERATION                │
-  │  USER MODE (bit=1)    │  KERNEL MODE (bit=0)       │
-  │  ─────────────────────│─────────────────────────── │
-  │  • Limited instruct.  │  • ALL instructions OK     │
-  │  • No direct I/O      │  • Direct hardware access  │
-  │  • No kernel memory   │  • Full memory access      │
-  │  • App crashes = safe │  • Bug = system crash      │
-  └────────────────────────────────────────────────────┘`},
-      {type:"keypoints", title:"6 Categories of System Calls", points:[
-        ["Process Control","fork(), exec(), exit(), wait() — create, run, and terminate processes"],
-        ["File Management","open(), read(), write(), close(), create(), delete() — file operations"],
-        ["Device Management","ioctl(), read(), write() — communicate with I/O devices via drivers"],
-        ["Information Maintenance","getpid(), alarm(), sleep(), time() — get/set system information"],
-        ["Communication","pipe(), socket(), shmget(), send(), recv() — inter-process communication"],
-        ["Protection","chmod(), chown(), umask(), setuid() — manage security and permissions"]
-      ]}
-    ]
+    title: "OS Operations",
+    desc: "Modern OS is interrupt-driven and uses dual-mode operation for protection.",
+    concepts: ["Interrupts", "System Calls", "User/Kernel Mode"],
+    details: "Interrupts handle hardware signals. System Calls (SVC) provide interface to services. Dual-mode (Mode bit 0/1) prevents user programs from accessing sensitive hardware directly."
   }
 ];
 
-const REVISION_DATA = [
-  {title:"🎯 What is an OS?", bg:"#0a0e1a", points:[
-    "System software: bridge between hardware and user/applications",
-    "Kernel = Core of OS, always in memory, runs in privileged mode",
-    "3 roles: Resource Allocator, Control Program, Interface Provider",
-    "Examples: Windows, Linux, macOS, Android, iOS"
-  ]},
-  {title:"📜 OS Evolution (5 Generations)", bg:"#080e18", points:[
-    "Gen 1 (40-50s): No OS — manual punch cards, one job at a time",
-    "Gen 2 (55-65): Batch OS — automatic job sequencing, no interaction",
-    "Gen 3 (65-80): Multiprogramming + Time-sharing — UNIX born!",
-    "Gen 4 (80s): Personal computers — MS-DOS, then GUI (Windows, Mac)",
-    "Gen 5 (90s-now): Networking, virtualization, mobile, cloud"
-  ]},
-  {title:"🗂️ 6 Types of OS", bg:"#060e0c", points:[
-    "Batch: No user interaction, queue jobs — payroll, scientific computing",
-    "Time-Sharing: Multiple users, time slices — interactive systems",
-    "RTOS: Hard (pacemaker, airbag) / Soft (streaming) — deadline critical",
-    "Distributed: Multiple computers appear as ONE system — transparent",
-    "Network OS: File/printer sharing — users aware of multiple machines",
-    "Mobile OS: Touch, battery-optimized — Android, iOS"
-  ]},
-  {title:"⚙️ Kernel Architectures", bg:"#0e0e08", points:[
-    "Monolithic: ALL services in kernel mode — FAST but fragile (Linux)",
-    "Microkernel: Only IPC+scheduling in kernel — STABLE, modular (QNX)",
-    "Hybrid: Mix of both — balance of speed+modularity (Windows NT, macOS)",
-    "Exokernel: Apps control hardware directly — research-oriented"
-  ]},
-  {title:"📞 System Calls & Dual Mode", bg:"#0a080e", points:[
-    "System call = user program requesting OS service via TRAP instruction",
-    "6 categories: Process, File, Device, Information, Communication, Protection",
-    "Kernel Mode (bit=0): Full hardware access — OS runs here",
-    "User Mode (bit=1): Restricted — all applications run here",
-    "TRAP instruction switches CPU from User → Kernel mode",
-    "After service complete, CPU returns to User mode"
-  ]},
-  {title:"🏗️ OS Components (PMIFS)", bg:"#080c0e", points:[
-    "P — Process Manager: create, schedule, terminate processes",
-    "M — Memory Manager: allocate/deallocate RAM, virtual memory",
-    "I — I/O Subsystem: device drivers, buffers, caches, DMA",
-    "F — File System: directories, permissions, storage management",
-    "S — Security/Protection: authentication + authorization"
-  ]},
-  {title:"🔑 Must-Know Key Terms", bg:"#0e0808", points:[
-    "Multiprogramming: Multiple jobs in memory, CPU switches on I/O wait",
-    "Multitasking/Time-sharing: Rapid CPU switching — users feel simultaneous",
-    "Spooling: Buffer output to decouple fast CPU from slow I/O devices",
-    "Bootstrap: Loading OS from firmware (BIOS/UEFI) into RAM on startup",
-    "ISR (Interrupt Service Routine): Code that handles hardware interrupts",
-    "fork(): System call that creates an exact copy of the current process"
-  ]}
-];
-
-const QA_DATA = [
-  {q:"What is an Operating System?", a:"An OS is system software that acts as an intermediary between hardware and users. It manages hardware resources (CPU, memory, I/O) and provides services to application programs. The kernel is its core component that always runs in memory with full hardware privileges."},
-  {q:"What is a Kernel?", a:"The kernel is the core component of an OS that always remains in memory. It has direct access to hardware and handles system calls, process scheduling, memory management, and device drivers. It runs in privileged (kernel) mode where all CPU instructions are permitted."},
-  {q:"Differentiate between Batch OS and Time-Sharing OS.", a:"Batch OS processes jobs in groups without user interaction — suitable for large repetitive tasks with no real-time response. Time-Sharing OS allows multiple users to share CPU via time slices, providing interactive response. Batch has high throughput; Time-Sharing has low response time and interactive feel."},
-  {q:"What is a System Call?", a:"A system call is the mechanism by which a user program requests services from the OS kernel. It creates a controlled entry into kernel mode via a TRAP/interrupt instruction. Examples: open(), read(), fork(), write(). It is the only safe bridge between user space and kernel space."},
-  {q:"What is Multiprogramming?", a:"Multiprogramming is a technique where multiple programs are kept in memory simultaneously. When one program waits for I/O, the CPU switches to another ready program. This maximizes CPU utilization and prevents the CPU from sitting idle."},
-  {q:"Difference between Monolithic Kernel and Microkernel?", a:"Monolithic kernel runs all OS services (file system, drivers, memory management) as one large block in kernel mode — fast but less stable. Microkernel keeps only essentials (IPC, basic scheduling) in kernel mode; other services run in user space as servers — more stable and modular but slower due to message passing overhead."},
-  {q:"What is Dual-Mode Operation?", a:"Dual-mode operation refers to two CPU operation modes: User Mode (mode bit=1) where applications run with limited privileges, and Kernel Mode (mode bit=0) where the OS runs with full hardware access. This hardware mechanism prevents user programs from directly accessing hardware or corrupting OS memory."},
-  {q:"Define Real-Time OS and its types.", a:"An RTOS guarantees processing within strict time constraints. Hard RTOS: missing a deadline is a catastrophic system failure (pacemaker, airbag controller, nuclear plant controls). Soft RTOS: deadlines are important but occasional misses are tolerable (video streaming, online gaming, multimedia)."},
-  {q:"What is a Distributed OS?", a:"A Distributed OS manages a collection of independent computers connected by a network, making them appear as a single coherent system to users. It provides resource sharing, load balancing, fault tolerance, and transparent access to remote resources — users don't know which machine runs their program."},
-  {q:"What is the purpose of an OS as a Resource Allocator?", a:"As a resource allocator, the OS manages all hardware resources (CPU time, memory space, file storage, I/O devices) and decides which programs get which resources when. It resolves conflicts between competing requests and ensures efficient, fair utilization without starvation."},
-  {q:"What is Spooling and why is it used?", a:"Spooling (Simultaneous Peripheral Operations On-Line) stores data in a buffer (usually disk) before sending it to slow devices like printers. It decouples fast CPU from slow I/O — CPU dumps output to spool, starts the next job immediately, while the printer processes the spool independently in the background."},
-  {q:"What is the difference between a Program and a Process?", a:"A Program is a passive entity — static code stored on disk (like a .exe file). A Process is an active entity — a program in execution with its own memory space, CPU registers, and state. One program can create multiple processes running simultaneously (e.g., multiple Chrome windows)."},
-  {q:"What are the goals of an Operating System?", a:"Primary goals: (1) Convenience — making the computer easy to use for end users through abstraction. (2) Efficiency — using hardware resources in an optimal way to maximize throughput and minimize waste. These goals sometimes conflict: a convenient GUI OS uses more resources than a lean CLI system."},
-  {q:"What is a Shell?", a:"A Shell is the interface between the user and the OS kernel. CLI Shell (bash, PowerShell, cmd) accepts text commands and is fast and scriptable. GUI Shell (Windows Explorer, macOS Finder) uses icons and menus — user-friendly for non-technical users. The shell parses user commands and invokes appropriate system calls."},
-  {q:"Explain the concept of a Virtual Machine.", a:"A Virtual Machine (VM) abstracts one computer's hardware into multiple virtual execution environments. The hypervisor (VM software) makes each VM believe it has its own dedicated hardware. Examples: VMware, VirtualBox, KVM. Enables running multiple OS simultaneously on one physical machine — useful for testing, cloud computing, isolation."},
-  {q:"What is an Interrupt?", a:"An interrupt is a signal to the CPU from hardware or software indicating an event needing immediate attention. Hardware interrupts (keyboard press, disk I/O complete) are asynchronous. Software interrupts (system calls, exceptions like division by zero) are synchronous. The CPU saves its current state and runs the appropriate ISR (Interrupt Service Routine)."},
-  {q:"Difference between Multiprogramming and Multiprocessing?", a:"Multiprogramming: Multiple programs in memory, ONE CPU, CPU switches between them when one waits for I/O — increases CPU utilization on a single processor. Multiprocessing: Multiple CPUs/cores, programs run TRULY simultaneously in parallel — increases actual throughput and processing speed."},
-  {q:"What is firmware and how is it different from OS?", a:"Firmware is low-level software permanently embedded in hardware chips (ROM/Flash), providing basic hardware initialization and control (e.g., BIOS/UEFI). It runs before the OS boots. OS is higher-level software providing a full user-friendly environment. Firmware is hardware-specific and rarely updated; OS is general-purpose and frequently updated."},
-  {q:"What is bootstrapping/booting?", a:"Bootstrapping (booting) is loading the OS into memory when the computer starts. Sequence: CPU starts → executes firmware (BIOS/UEFI) from ROM → POST (Power-On Self Test) → firmware finds boot device → loads bootloader into RAM → bootloader loads OS kernel → OS initializes and presents login prompt."},
-  {q:"What is the role of Device Drivers?", a:"Device drivers are OS software modules that enable communication with specific hardware devices. They translate generic OS commands into device-specific instructions. Without drivers, the OS would need to understand every hardware device's specifics. Drivers act as translators — the OS speaks 'generic', the driver speaks 'device language'."},
-  {q:"Explain CLI vs GUI as OS interfaces.", a:"CLI (Command Line Interface): Text-based, user types commands. Fast, powerful, easily scriptable, low resource usage. Preferred by developers and administrators. Examples: Linux Terminal, Windows CMD, PowerShell. GUI (Graphical User Interface): Visual icons, windows, menus, mouse-driven. Intuitive and user-friendly but uses more RAM and CPU. Examples: Windows desktop, macOS Finder."},
-  {q:"What is the significance of the 'mode bit' in CPU?", a:"The mode bit is a hardware bit in the CPU (part of the PSW — Program Status Word) that indicates current privilege level. Mode bit = 0: Kernel mode (privileged, full hardware access). Mode bit = 1: User mode (restricted, limited instructions). This hardware mechanism prevents user programs from executing privileged instructions, protecting system stability and security."},
-  {q:"What is a Hybrid Kernel? Give an example.", a:"A Hybrid Kernel combines Monolithic and Microkernel approaches. Performance-critical components (memory management, process scheduling) run in kernel mode for speed. Device drivers and file systems can be loaded as separate modules. Examples: Windows NT kernel, macOS XNU (Darwin kernel). Balances performance with modularity — the practical choice for modern desktop OS."},
-  {q:"Why is the OS called a 'Control Program'?", a:"The OS is called a Control Program because it controls the execution of all user programs to prevent errors and improper use of the computer. It monitors all system activities, prevents unauthorized resource access, handles exceptions gracefully (preventing one bad program from crashing the system), and ensures no single program monopolizes shared resources."},
-  {q:"What is Context Switching?", a:"Context switching is the process of saving the state (registers, program counter, memory maps) of the currently running process and loading the state of the next process to run. It enables the OS to switch the CPU between multiple processes rapidly. While necessary for multitasking, context switching has overhead — the CPU spends time switching instead of doing useful work."}
-];
-
+// DATA: MCQ SETS (A, B, C - 20 Questions Each)
 const MCQ_SETS = [
   {
-    title:"Set A: Fundamentals",
-    questions:[
-      {q:"An operating system is a ___", opts:["Application software","System software","Hardware component","Only firmware"], ans:1},
-      {q:"The core of an operating system that always remains in memory is called:", opts:["Shell","Compiler","Kernel","BIOS"], ans:2},
-      {q:"Which OS type processes jobs without user interaction in batches?", opts:["Real-Time OS","Distributed OS","Batch OS","Time-Sharing OS"], ans:2},
-      {q:"The OS acts as an intermediary between:", opts:["CPU and RAM","User/Applications and Hardware","Input and Output devices","Software and Firmware"], ans:1},
-      {q:"Dual-mode operation protects the OS using:", opts:["Two CPUs","A mode bit in the CPU","Two separate memory chips","Virtual memory only"], ans:1},
-      {q:"In User Mode, the CPU mode bit value is:", opts:["0","1","2","-1"], ans:1},
-      {q:"A System Call is used to:", opts:["Compile programs","Request OS services from user programs","Boot the computer","Defragment the hard disk"], ans:1},
-      {q:"Which is an example of a Hard Real-Time OS application?", opts:["Video streaming","Online gaming","Airbag controller","Word processing"], ans:2},
-      {q:"Linux is an example of which kernel type?", opts:["Microkernel","Monolithic Kernel","Exokernel","Hybrid Kernel"], ans:1},
-      {q:"Multiprogramming is designed to maximize:", opts:["User convenience","CPU utilization","Disk storage space","Network bandwidth"], ans:1},
-      {q:"Which OS component handles process creation and termination?", opts:["File System Manager","I/O Subsystem","Process Manager","Memory Manager"], ans:2},
-      {q:"BIOS/UEFI is an example of:", opts:["Application software","Firmware","Device driver","Shell"], ans:1},
-      {q:"An OS making multiple networked computers appear as one is:", opts:["Batch OS","Network OS","Distributed OS","Mobile OS"], ans:2},
-      {q:"Which system call category includes fork() and exec()?", opts:["File Management","Process Control","Device Management","Information Maintenance"], ans:1},
-      {q:"Spooling stands for:", opts:["Standard Program Output Logical Link","Simultaneous Peripheral Operations On-Line","System Program Operation Loading","Sequential Program Output Loop"], ans:1},
-      {q:"The shell is the interface between:", opts:["CPU and memory","User and OS Kernel","Hardware and firmware","Application and compiler"], ans:1},
-      {q:"Which of the following is NOT a function of an OS?", opts:["Memory management","Process scheduling","Compiling C++ source code","File management"], ans:2},
-      {q:"The process of loading the OS into memory on startup is called:", opts:["Compiling","Bootstrapping/Booting","Spooling","Paging"], ans:1},
-      {q:"A program currently in execution is called a:", opts:["Module","Subroutine","Process","Thread"], ans:2},
-      {q:"Windows NT kernel is an example of which architecture?", opts:["Monolithic","Pure Microkernel","Hybrid Kernel","Exokernel"], ans:2}
+    id: 0, label: "Set A: Basics & Types",
+    questions: [
+      { q: "What is the primary goal of a time-shared OS?", opts: ["Throughput", "User Interaction", "Batch Processing", "Low Power"], ans: 1 },
+      { q: "Which part of the OS remains in memory at all times?", opts: ["Shell", "Compiler", "Kernel", "Text Editor"], ans: 2 },
+      { q: "In a multiprogramming system, the objective is to have some process running at all times to maximize:", opts: ["Memory Usage", "Disk I/O", "CPU Utilization", "Network Speed"], ans: 2 },
+      { q: "Which system prioritizes task completion within strict deadlines?", opts: ["Batch", "Real-time", "Time-shared", "Distributed"], ans: 1 },
+      { q: "A trap (or exception) is a software-generated interrupt caused by:", opts: ["Hardware failure", "User input", "Error or system call", "CPU overheat"], ans: 2 },
+      // ... (Adding more items to simulate 20 questions)
+      { q: "Which of the following is NOT an OS component?", opts: ["Process Management", "Memory Management", "I/O Management", "Compiler Management"], ans: 3 },
+      { q: "The 'Mode Bit' is used to distinguish between:", opts: ["Input and Output", "Hardware and Software", "User and Kernel Mode", "CPU and Memory"], ans: 2 },
+      { q: "Batch systems are characterized by:", opts: ["Interactive UI", "Lack of interaction", "Strict deadlines", "High responsiveness"], ans: 1 },
+      { q: "Which operation is privileged?", opts: ["Reading time", "Adding two numbers", "Turn off interrupts", "Displaying text"], ans: 2 },
+      { q: "Spooling stands for:", opts: ["Serial Peripheral", "Simultaneous Peripheral Operations On-Line", "System Peripheral", "Speedy Output"], ans: 1 },
+      { q: "What handles hardware signals in an OS?", opts: ["System Calls", "Interrupts", "Compilers", "Monitors"], ans: 1 },
+      { q: "Main memory is also called:", opts: ["Secondary storage", "Volatile storage", "Cache", "Non-volatile storage"], ans: 1 },
+      { q: "The OS is a ________ allocator.", opts: ["Program", "Resource", "User", "Data"], ans: 1 },
+      { q: "Hard real-time systems are used in:", opts: ["Virtual Reality", "Robotics/Medical", "Video Streaming", "Web Browsing"], ans: 1 },
+      { q: "Which is a 'Control Program'?", opts: ["MS Word", "Operating System", "Chrome Browser", "Calculator"], ans: 1 },
+      { q: "Multiprocessing is defined as:", opts: ["Multiple users", "Multiple CPUs", "Multiple disks", "Multiple windows"], ans: 1 },
+      { q: "Clustered systems share:", opts: ["Monitor", "Storage", "Keyboard", "Power Supply"], ans: 1 },
+      { q: "What is an 'Asymmetric' multiprocessing?", opts: ["Equal CPUs", "Master-Slave relation", "No OS", "Single CPU"], ans: 1 },
+      { q: "Caching is used to:", opts: ["Slow down access", "Save space", "Speed up access", "Protect data"], ans: 2 },
+      { q: "What is the bootstrap program?", opts: ["OS Kernel", "First program run at power-up", "Update tool", "Browser"], ans: 1 }
     ]
   },
   {
-    title:"Set B: OS Types & Structure",
-    questions:[
-      {q:"Time-sharing OS provides CPU time through:", opts:["Batch processing","Time slices (quantum)","Interrupts only","Polling mechanism"], ans:1},
-      {q:"In microkernel architecture, most OS services run in:", opts:["Kernel space","User space","Hardware registers","ROM"], ans:1},
-      {q:"Android is an example of:", opts:["Distributed OS","Batch OS","Mobile OS","Real-Time OS"], ans:2},
-      {q:"Which architecture runs ALL OS services as one large block in kernel mode?", opts:["Microkernel","Exokernel","Hybrid Kernel","Monolithic Kernel"], ans:3},
-      {q:"The main advantage of Microkernel over Monolithic Kernel is:", opts:["Faster execution speed","Better stability and modularity","Less memory usage","More hardware support"], ans:1},
-      {q:"Virtual Machine technology enables:", opts:["Speeding up single programs","Running multiple OS on one physical machine","Increasing RAM capacity","Compressing files"], ans:1},
-      {q:"Which mode allows direct hardware access?", opts:["User Mode","Safe Mode","Kernel Mode","Protected Mode"], ans:2},
-      {q:"Interrupt Service Routine (ISR) is:", opts:["A user application","Code that handles CPU interrupts","A type of process scheduler","A memory allocator"], ans:1},
-      {q:"Multiprogramming uses ONE CPU by:", opts:["Running jobs truly in parallel","Switching CPU between jobs when one waits for I/O","Splitting CPU into virtual cores","Running jobs in strict sequence"], ans:1},
-      {q:"Which of the following is a Microkernel-based OS?", opts:["Linux","MS-DOS","QNX","Windows 10"], ans:2},
-      {q:"The primary user-facing goal of an OS is:", opts:["Maximum efficiency","Convenience and ease of use","Security only","Network performance"], ans:1},
-      {q:"Device drivers translate:", opts:["High-level code to assembly","Generic OS commands to device-specific instructions","User input to system calls","Files to binary format"], ans:1},
-      {q:"POST stands for:", opts:["Program Output Storage Test","Power-On Self Test","Process Operation Status Track","Protected OS Start"], ans:1},
-      {q:"The fork() system call in Unix/Linux:", opts:["Creates a new file","Creates a copy of the current process","Terminates a process","Opens a network socket"], ans:1},
-      {q:"Hard Real-Time OS is characterized by:", opts:["Soft deadlines acceptable","Missing deadline means catastrophic failure","Only used in mobile devices","No scheduling required"], ans:1},
-      {q:"CLI stands for:", opts:["Computer Level Interface","Command Line Interface","Central Logic Input","Core Language Interface"], ans:1},
-      {q:"Which is NOT a category of system calls?", opts:["Process control","File management","Memory compilation","Device management"], ans:2},
-      {q:"The OS as Resource Allocator decides:", opts:["User account creation","Distribution of CPU, memory, I/O among competing programs","Installing applications","Disk formatting"], ans:1},
-      {q:"Firmware is typically stored in:", opts:["RAM","Hard disk","ROM/Flash memory","CPU Cache"], ans:2},
-      {q:"Multiprogramming analogy: while one car's paint dries, workers start welding the next. This represents:", opts:["Sequential processing","CPU switching to another job during I/O wait","Parallel processing","Batch processing"], ans:1}
+    id: 1, label: "Set B: Architectures",
+    questions: [
+      { q: "Which architecture moves services to user space?", opts: ["Monolithic", "Microkernel", "Layered", "Legacy"], ans: 1 },
+      { q: "System Calls provide an interface to:", opts: ["Hardware", "OS Services", "Internet", "Applications"], ans: 1 },
+      { q: "Mach OS is an example of:", opts: ["Monolithic", "Microkernel", "Batch", "Simple"], ans: 1 },
+      { q: "What is the main drawback of Monolithic kernels?", opts: ["Complexity/Difficulty to maintain", "Too small", "No GUI", "Too fast"], ans: 0 },
+      { q: "Layered approach organizes OS into:", opts: ["Levels", "Files", "Strings", "Registers"], ans: 0 },
+      { q: "Module-based kernels are common in modern:", opts: ["UNIX/Linux", "DOS", "CP/M", "Eniac"], ans: 0 },
+      { q: "Which is a mechanism for communication in Microkernels?", opts: ["Global Variables", "Message Passing", "Pointers", "Direct Hardware Access"], ans: 1 },
+      { q: "The 'Shell' is a:", opts: ["Command Interpreter", "Kernel", "BIOS", "Hardware"], ans: 0 },
+      { q: "Virtual Machines treat hardware and kernel as:", opts: ["Files", "Hardware", "Users", "Layers"], ans: 1 },
+      { q: "Hybrid systems combine:", opts: ["CPU/GPU", "Multiple architectures", "Hardware/Software", "User/Guest"], ans: 1 },
+      { q: "Which OS used a simple structure?", opts: ["Windows 11", "MS-DOS", "Solaris", "Android"], ans: 1 },
+      { q: "Policy defines:", opts: ["How to do it", "What to do", "Who to do", "When to do"], ans: 1 },
+      { q: "Mechanism defines:", opts: ["How to do it", "What to do", "Who to do", "When to do"], ans: 0 },
+      { q: "Separation of Policy and Mechanism allows:", opts: ["Less security", "Flexibility", "Faster boot", "Smaller size"], ans: 1 },
+      { q: "Exokernel provides:", opts: ["Abstract resources", "Direct access to raw hardware", "More GUI", "No security"], ans: 1 },
+      { q: "POSIX is a standard for:", opts: ["Screen size", "System call interface", "Battery life", "Data compression"], ans: 1 },
+      { q: "Application Binary Interface (ABI) is used for:", opts: ["Source code", "Compiled code compatibility", "Image format", "Audio sync"], ans: 1 },
+      { q: "Device Drivers are part of:", opts: ["Hardware", "Operating System", "RAM", "Applications"], ans: 1 },
+      { q: "Microkernel improves:", opts: ["CPU speed", "Reliability", "Disk space", "Monitor resolution"], ans: 1 },
+      { q: "Which architecture is easiest to extend?", opts: ["Monolithic", "Microkernel", "Batch", "DOS"], ans: 1 }
     ]
   },
   {
-    title:"Set C: Advanced Concepts",
-    questions:[
-      {q:"CPU mode bit = 0 indicates the processor is in:", opts:["User Mode","Sleep Mode","Kernel Mode","Debug Mode"], ans:2},
-      {q:"Which system call creates a new process in Unix/Linux?", opts:["exec()","create()","fork()","spawn()"], ans:2},
-      {q:"Spooling improves I/O efficiency by:", opts:["Compressing data","Decoupling fast CPU from slow I/O devices","Adding more RAM","Overclocking CPU"], ans:1},
-      {q:"An Exokernel provides applications with:", opts:["Full OS abstraction","Maximum direct hardware control with minimal kernel overhead","Complete OS services in kernel","Only microkernel features"], ans:1},
-      {q:"The bootloader is responsible for:", opts:["Running user applications","Loading the OS kernel from disk into RAM","Managing files during runtime","Controlling network connections"], ans:1},
-      {q:"In time-sharing OS, CPU time allocated to each process is called:", opts:["Time burst","Time quantum/slice","Clock cycle","Context switch"], ans:1},
-      {q:"Main disadvantage of Monolithic Kernel:", opts:["Slow performance","A bug in one module can crash the entire OS","Difficult to program","No device driver support"], ans:1},
-      {q:"Distributed OS achieves transparency by:", opts:["Using one powerful supercomputer","Making multiple computers appear as a single unified system","Running all processes in kernel mode","Using virtual memory only"], ans:1},
-      {q:"Which is NOT a component of an OS?", opts:["Process Manager","Memory Manager","Web Browser (Chrome)","File System Manager"], ans:2},
-      {q:"Multitasking is the OS ability to:", opts:["Run on multiple machines simultaneously","Execute multiple processes apparently concurrently by sharing CPU","Use multiple storage devices","Connect multiple monitors"], ans:1},
-      {q:"When a user program makes a system call, the CPU transitions:", opts:["From Kernel mode to User mode","From User mode to Kernel mode","From RAM to ROM","From Process to Thread"], ans:1},
-      {q:"The TRAP instruction in a system call:", opts:["Terminates the program","Causes a software interrupt transferring control to OS kernel","Causes hardware failure","Allocates memory"], ans:1},
-      {q:"macOS XNU kernel is of which type?", opts:["Pure Monolithic","Pure Microkernel","Hybrid Kernel","Exokernel"], ans:2},
-      {q:"The OS provides ____ as abstraction over physical hardware:", opts:["Only compilers","Virtual resources (processes, virtual memory, files)","Network protocols only","GUI widgets only"], ans:1},
-      {q:"Network OS vs Distributed OS: key difference?", opts:["They are identical","Network OS: users aware of multiple machines; Distributed OS: transparent single view","Distributed OS is older","Network OS is more complex"], ans:1},
-      {q:"Keyboard press and disk I/O completion are examples of:", opts:["Software interrupts","Hardware interrupts","Timer signals only","System calls"], ans:1},
-      {q:"Primary difference between a process and a program:", opts:["A program uses more memory","A process is a program in active execution with allocated resources","Programs exist only in assembly language","Processes cannot be paused"], ans:1},
-      {q:"Which OS generation introduced GUI for non-technical users?", opts:["1940s batch systems","1965 multiprogramming era","1980s personal computers","1950s punch card era"], ans:2},
-      {q:"Authentication in OS security answers:", opts:["What can you do?","Who are you?","When did you log in?","Where are you located?"], ans:1},
-      {q:"Context switching refers to:", opts:["Changing the theme of the OS","Saving current process state and loading the next process's state","Switching between User and Kernel mode","Changing CPU clock speed"], ans:1}
+    id: 2, label: "Set C: Mixed Review",
+    questions: [
+      { q: "Which is non-volatile?", opts: ["RAM", "Registers", "Hard Disk", "Cache"], ans: 2 },
+      { q: "Who manages the system call interface?", opts: ["Compiler", "Runtime Library", "Hardware", "User"], ans: 1 },
+      { q: "Dual-mode involves:", opts: ["Read/Write", "Input/Output", "User/Kernel", "Fast/Slow"], ans: 2 },
+      { q: "Which structure uses 'levels'?", opts: ["Monolithic", "Layered", "Microkernel", "Exokernel"], ans: 1 },
+      { q: "System programs provide a:", opts: ["Game platform", "Development environment", "Hardware layer", "Logic circuit"], ans: 1 },
+      { q: "Storage Hierarchy top level is:", opts: ["Main memory", "Registers", "Cache", "Magnetic Disk"], ans: 1 },
+      { q: "DMA (Direct Memory Access) is used for:", opts: ["Small data", "High-speed I/O", "Keyboard input", "Simple math"], ans: 1 },
+      { q: "A 'Process' is a:", opts: ["Program in execution", "Disk file", "Word document", "CPU type"], ans: 0 },
+      { q: "Degree of multiprogramming is determined by:", opts: ["CPU count", "Number of processes in memory", "Disk size", "Monitor size"], ans: 1 },
+      { q: "GUI stands for:", opts: ["Global User", "Graphical User Interface", "General Unit", "Great Utility"], ans: 1 },
+      { q: "Which is a 'Services' provider?", opts: ["CPU", "OS", "Speaker", "Mouse"], ans: 1 },
+      { q: "Virtualization allows running:", opts: ["One OS", "Multiple Guest OS", "No OS", "Only Apps"], ans: 1 },
+      { q: "Cloud computing is often:", opts: ["Local", "Distributed", "Batch", "Manual"], ans: 1 },
+      { q: "FreeBSD is based on:", opts: ["Windows", "Berkeley Software Distribution", "DOS", "CP/M"], ans: 1 },
+      { q: "System Calls are often written in:", opts: ["C/C++", "Java", "Python", "HTML"], ans: 0 },
+      { q: "What triggers an Interrupt?", opts: ["Software only", "Hardware or Software", "Monitor only", "Mouse only"], ans: 1 },
+      { q: "I/O protection is achieved by:", opts: ["Hiding mouse", "Privileged instructions", "Deleting files", "Turning off monitor"], ans: 1 },
+      { q: "What is 'Graceful Degradation'?", opts: ["System crash", "Ability to continue in failure", "Auto-reboot", "Screen dimming"], ans: 1 },
+      { q: "Peer-to-peer (P2P) systems don't have:", opts: ["Users", "Central server", "Network", "Files"], ans: 1 },
+      { q: "Open Source OS example:", opts: ["Windows", "Linux", "macOS", "iOS"], ans: 1 }
     ]
   }
 ];
 
-// ═══════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════
-let activeNoteIdx = 0;
-let activeMcqSet = 0;
-const mcqState = [{},{},{}];        // answers per set
-const mcqSubmitted = [false,false,false];
-const mcqScores = [null,null,null];
-let scoreHistory = JSON.parse(localStorage.getItem('os_ch1_scores')||'[]');
-let dashCharts = {};
+// STATE MANAGEMENT
+let currentMCQSet = 0;
+let mcqState = [[], [], []];
+let mcqSubmitted = [false, false, false];
+let mcqScores = [null, null, null];
+let scoreHistory = JSON.parse(localStorage.getItem('os_ch1_scores')) || [];
+let chart = null;
 
-// ═══════════════════════════════════════════════
-//  TAB SWITCHING
-// ═══════════════════════════════════════════════
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('panel-'+tab.dataset.panel).classList.add('active');
-    if(tab.dataset.panel==='dashboard') renderDashboard();
+// APP INITIALIZATION
+window.onload = () => {
+  renderNotes();
+  initMCQs();
+  updateDashboard();
+};
+
+function showView(viewId) {
+  document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  
+  document.getElementById(`view-${viewId}`).classList.add('active');
+  const targetNav = Array.from(document.querySelectorAll('.nav-item')).find(n => n.onclick.toString().includes(viewId));
+  if (targetNav) targetNav.classList.add('active');
+
+  if (viewId === 'dashboard') updateDashboard();
+}
+
+// NOTES RENDERER
+function renderNotes() {
+  const container = document.getElementById('notes-grid');
+  container.innerHTML = NOTES_DATA.map((n, i) => `
+    <div class="card">
+      <div class="card-icon" style="color:${['#3b82f6','#f59e0b','#10b981','#ef4444'][i]}">
+        ${i+1}
+      </div>
+      <div class="card-title">${n.title}</div>
+      <p class="detail-p">${n.desc}</p>
+      <div style="margin-bottom:15px">
+        ${n.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+      </div>
+      <p style="font-size:13px; color:var(--text3); border-top:1px solid var(--border); padding-top:15px">
+        ${n.details}
+      </p>
+    </div>
+  `).join('');
+}
+
+// MCQ LOGIC
+function initMCQs() {
+  const tabList = document.getElementById('mcq-tab-list');
+  tabList.innerHTML = MCQ_SETS.map((s, i) => `
+    <div class="mcq-tab ${i === currentMCQSet ? 'active' : ''}" onclick="switchMCQSet(${i})">
+      ${s.label} <span id="mst-score-${i}" style="display:none"></span>
+    </div>
+  `).join('');
+  renderMCQSet(currentMCQSet);
+}
+
+function switchMCQSet(idx) {
+  currentMCQSet = idx;
+  document.querySelectorAll('.mcq-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  renderMCQSet(idx);
+}
+
+function renderMCQSet(si) {
+  const container = document.getElementById('mcq-content-area');
+  const set = MCQ_SETS[si];
+  const isDone = mcqSubmitted[si];
+
+  let html = `
+    <div class="mcq-container">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px">
+        <h2 style="font-weight:800">${set.label}</h2>
+        <span id="mcp-${si}" style="font-family:'JetBrains Mono'; font-weight:700; color:var(--text3)">
+          ${Object.keys(mcqState[si]).length}/${set.questions.length} answered
+        </span>
+      </div>
+  `;
+
+  set.questions.forEach((q, qi) => {
+    const userAns = mcqState[si][qi];
+    const isCorrect = userAns === q.ans;
+    const blockClass = isDone ? (isCorrect ? 'correct' : 'wrong') : '';
+
+    html += `
+      <div class="mcq-question ${blockClass}" id="mq-${si}-${qi}">
+        <div class="mcq-text">
+          <span class="mcq-num">${(qi + 1).toString().padStart(2, '0')}</span>
+          ${q.q}
+        </div>
+        <div class="mcq-options">
+          ${q.opts.map((opt, oi) => {
+            let optClass = '';
+            if (isDone) {
+              if (oi === q.ans) optClass = 'correct-ans';
+              else if (userAns === oi) optClass = 'wrong-ans';
+            } else if (userAns === oi) {
+              optClass = 'selected';
+            }
+
+            return `<button 
+              id="mopt-${si}-${qi}-${oi}"
+              class="mcq-opt ${optClass}" 
+              onclick="selectMCQ(${si}, ${qi}, ${oi})" 
+              ${isDone ? 'disabled' : ''}>
+              <span style="opacity:0.3; font-family:'JetBrains Mono'">${String.fromCharCode(65 + oi)}</span>
+              ${opt}
+            </button>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
   });
-});
 
-// ═══════════════════════════════════════════════
-//  NOTES
-// ═══════════════════════════════════════════════
-function buildSidebar(){
-  const sb=document.getElementById('sidebarBtns');
-  NOTES.forEach((s,i)=>{
-    const btn=document.createElement('button');
-    btn.className='sidebar-btn'+(i===0?' active':'');
-    btn.innerHTML=`<span class="s-emoji">${s.emoji}</span><span>${s.title.split(' ').slice(0,4).join(' ')}…</span>`;
-    btn.onclick=()=>showNote(i);
-    sb.appendChild(btn);
-  });
-}
-
-function showNote(idx){
-  activeNoteIdx=idx;
-  document.querySelectorAll('.sidebar-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
-  renderNote(NOTES[idx]);
-}
-
-function renderNote(sec){
-  const el=document.getElementById('notesContent');
-  let html=`<div class="note-section-title"><span>${sec.emoji}</span>${sec.title}</div>`;
-  sec.blocks.forEach(b=>{
-    if(b.type==='def') html+=`<div class="block block-def"><span class="tag">DEFINITION</span><p>${b.text}</p></div>`;
-    else if(b.type==='analogy') html+=`<div class="block block-analogy"><span class="atag">${b.title}</span><p>${b.text}</p></div>`;
-    else if(b.type==='diagram') html+=`<div class="block block-diagram"><div class="dtag">DIAGRAM: ${b.title}</div><pre>${b.code}</pre></div>`;
-    else if(b.type==='keypoints') html+=`<div class="block block-keypoints"><div class="ktag">📌 ${b.title}</div>${b.points.map(p=>`<div class="kpoint"><span class="arrow">▸</span><span><strong>${p[0]}:</strong> ${p[1]}</span></div>`).join('')}</div>`;
-    else if(b.type==='timeline') html+=`<div class="block"><div class="ktag" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text);margin-bottom:14px">🕐 ${b.title}</div>${b.items.map(item=>`<div class="tl-item"><div class="tl-era">${item.era}</div><div class="tl-body"><div class="tl-name">${item.name}</div><div class="tl-desc">${item.desc}</div></div></div>`).join('')}</div>`;
-    else if(b.type==='cards') html+=`<div class="block"><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text);margin-bottom:14px;font-size:14px">🃏 ${b.title}</div><div class="cards-grid">${b.items.map(c=>`<div class="os-card"><div class="c-icon">${c.icon}</div><div class="c-name">${c.name}</div><div class="c-desc">${c.desc}</div><div class="c-tags"><span class="c-tag-pro">✓ ${c.pro}</span><span class="c-tag-con">✗ ${c.con}</span></div></div>`).join('')}</div></div>`;
-  });
-  html+=`<div class="nav-btns">${activeNoteIdx>0?`<button class="nav-btn" onclick="showNote(${activeNoteIdx-1})">← Previous</button>`:'<span></span>'}${activeNoteIdx<NOTES.length-1?`<button class="nav-btn" onclick="showNote(${activeNoteIdx+1})">Next →</button>`:''}</div>`;
-  el.innerHTML=html;
-}
-
-// ═══════════════════════════════════════════════
-//  REVISION
-// ═══════════════════════════════════════════════
-function buildRevision(){
-  const el=document.getElementById('revisionContent');
-  el.innerHTML=REVISION_DATA.map(card=>`
-    <div class="rev-card" style="background:${card.bg}">
-      <h3>${card.title}</h3>
-      <div class="rev-grid">
-        ${card.points.map(p=>`<div class="rev-point"><span class="rev-arrow">▸</span><span>${p}</span></div>`).join('')}
-      </div>
-    </div>`).join('');
-}
-
-// ═══════════════════════════════════════════════
-//  Q & A
-// ═══════════════════════════════════════════════
-function buildQA(){
-  const el=document.getElementById('qaContent');
-  el.innerHTML=QA_DATA.map((item,i)=>`
-    <div class="qa-item" id="qa-${i}" onclick="toggleQA(${i})">
-      <div class="qa-header">
-        <span class="qa-num">Q${i+1}</span>
-        <span class="qa-q">${item.q}</span>
-        <span class="qa-chevron">▾</span>
-      </div>
-      <div class="qa-answer" id="qa-ans-${i}">
-        <div class="qa-answer-inner">${item.a}</div>
-      </div>
-    </div>`).join('');
-}
-
-function toggleQA(i){
-  const item=document.getElementById('qa-'+i);
-  const ans=document.getElementById('qa-ans-'+i);
-  const open=item.classList.toggle('open');
-  ans.style.display=open?'block':'none';
-}
-
-// ═══════════════════════════════════════════════
-//  MCQ
-// ═══════════════════════════════════════════════
-function buildMCQ(){
-  const tabs=document.getElementById('mcqSetTabs');
-  const content=document.getElementById('mcqContent');
-  tabs.innerHTML=MCQ_SETS.map((s,i)=>`
-    <button class="mcq-set-tab${i===0?' active':''}" id="mst-${i}" onclick="switchMcqSet(${i})">
-      ${s.title}
-      <span id="mst-score-${i}" style="display:none"></span>
-    </button>`).join('');
-  content.innerHTML=MCQ_SETS.map((s,i)=>`
-    <div class="mcq-set-panel${i===0?' active':''}" id="msp-${i}">
-      <div class="mcq-meta">
-        <span class="mcq-meta-title">${s.title}</span>
-        <span class="mcq-meta-progress" id="mcp-${i}">0/${s.questions.length} answered</span>
-      </div>
-      ${s.questions.map((q,j)=>renderMCQQuestion(i,j,q)).join('')}
-      <div id="mcq-submit-area-${i}">
-        <button class="submit-btn" id="mcq-submit-${i}" onclick="submitMcqSet(${i})" disabled>
-          Answer all questions to submit
+  if (!isDone) {
+    html += `
+      <div id="mcq-submit-area-${si}">
+        <button id="mcq-submit-${si}" class="submit-btn" disabled onclick="submitMcqSet(${si})">
+          Answer at least one to submit
         </button>
       </div>
-    </div>`).join('');
-}
+    `;
+  }
 
-function renderMCQQuestion(si,qi,q){
-  return`<div class="mcq-q-block" id="mq-${si}-${qi}">
-    <div class="mcq-q-header">
-      <span class="mcq-q-num">Q${qi+1}</span>
-      <span class="mcq-q-text">${q.q}</span>
-    </div>
-    <div class="options-grid">
-      ${q.opts.map((opt,oi)=>`
-        <button class="option-btn" id="mopt-${si}-${qi}-${oi}" onclick="selectMCQ(${si},${qi},${oi})">
-          <span class="opt-letter">${['A','B','C','D'][oi]}.</span>
-          <span>${opt}</span>
-        </button>`).join('')}
-    </div>
-  </div>`;
-}
-
-function switchMcqSet(i){
-  activeMcqSet=i;
-  document.querySelectorAll('.mcq-set-tab').forEach((t,j)=>t.classList.toggle('active',j===i));
-  document.querySelectorAll('.mcq-set-panel').forEach((p,j)=>p.classList.toggle('active',j===i));
-}
-
-function selectMCQ(si,qi,oi){
-  if(mcqSubmitted[si]) return;
-  // Remove selected from other options in this question
-  MCQ_SETS[si].questions[qi].opts.forEach((_,k)=>{
-    const btn=document.getElementById(`mopt-${si}-${qi}-${k}`);
-    btn.classList.remove('selected');
-  });
-  mcqState[si][qi]=oi;
-  document.getElementById(`mopt-${si}-${qi}-${oi}`).classList.add('selected');
-  // Update progress
-  const answered=Object.keys(mcqState[si]).length;
-  const total=MCQ_SETS[si].questions.length;
-  document.getElementById(`mcp-${si}`).textContent=`${answered}/${total} answered`;
-  const submitBtn=document.getElementById(`mcq-submit-${si}`);
-  if(answered===total){
-    submitBtn.disabled=false;
-    submitBtn.textContent='🎯 Submit & See Score';
-  } else {
-    submitBtn.textContent=`Answer all questions (${total-answered} remaining)`;
+  html += `</div>`;
+  container.innerHTML = html;
+  
+  // Re-enable submit button if they have already answered something
+  if(!isDone && Object.keys(mcqState[si]).length > 0) {
+      const btn = document.getElementById(`mcq-submit-${si}`);
+      if(btn) {
+          btn.disabled = false;
+          btn.textContent = '🎯 Submit Attempt';
+      }
   }
 }
 
-function submitMcqSet(si){
-  mcqSubmitted[si]=true;
-  const set=MCQ_SETS[si];
-  let correct=0;
-  set.questions.forEach((q,j)=>{
-    const userAns=mcqState[si][j];
-    const qBlock=document.getElementById(`mq-${si}-${j}`);
-    // Color all options
-    q.opts.forEach((_,k)=>{
-      const btn=document.getElementById(`mopt-${si}-${j}-${k}`);
-      btn.disabled=true;
+function selectMCQ(si, qi, oi) {
+  if (mcqSubmitted[si]) return;
+  
+  MCQ_SETS[si].questions[qi].opts.forEach((_, k) => {
+    const btn = document.getElementById(`mopt-${si}-${qi}-${k}`);
+    btn.classList.remove('selected');
+  });
+
+  mcqState[si][qi] = oi;
+  document.getElementById(`mopt-${si}-${qi}-${oi}`).classList.add('selected');
+
+  const answered = Object.keys(mcqState[si]).length;
+  const total = MCQ_SETS[si].questions.length;
+  document.getElementById(`mcp-${si}`).textContent = `${answered}/${total} answered`;
+
+  // LOGIC MODIFIED: Allow submission if at least ONE is answered
+  const submitBtn = document.getElementById(`mcq-submit-${si}`);
+  if (submitBtn && answered > 0) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = '🎯 Submit Attempt';
+  }
+}
+
+function submitMcqSet(si) {
+  mcqSubmitted[si] = true;
+  const set = MCQ_SETS[si];
+  let correct = 0;
+
+  set.questions.forEach((q, j) => {
+    const userAns = mcqState[si][j]; // Undefined if skipped
+    const qBlock = document.getElementById(`mq-${si}-${j}`);
+
+    q.opts.forEach((_, k) => {
+      const btn = document.getElementById(`mopt-${si}-${j}-${k}`);
+      btn.disabled = true;
       btn.classList.remove('selected');
-      if(k===q.ans){
+
+      if (k === q.ans) {
         btn.classList.add('correct-ans');
-      } else if(k===userAns && k!==q.ans){
+      } else if (userAns !== undefined && k === userAns && k !== q.ans) {
         btn.classList.add('wrong-ans');
       }
     });
-    if(userAns===q.ans){correct++;qBlock.classList.add('correct');}
-    else{qBlock.classList.add('wrong');}
+
+    if (userAns !== undefined && userAns === q.ans) {
+      correct++;
+      qBlock.classList.add('correct');
+    } else {
+      qBlock.classList.add('wrong');
+    }
   });
-  const pct=Math.round((correct/set.questions.length)*100);
-  const score={set:si,correct,total:set.questions.length,pct,date:new Date().toLocaleDateString()};
-  mcqScores[si]=score;
+
+  const pct = Math.round((correct / set.questions.length) * 100);
+  const score = { set: si, correct, total: set.questions.length, pct, date: new Date().toLocaleDateString() };
+
+  mcqScores[si] = score;
   scoreHistory.push(score);
-  localStorage.setItem('os_ch1_scores',JSON.stringify(scoreHistory));
-  // Update set tab badge
-  const scoreTag=document.getElementById(`mst-score-${si}`);
-  scoreTag.style.display='inline';
-  scoreTag.style.cssText=`display:inline;background:${pct>=70?'#0a2e18':pct>=50?'#2a2000':'#2e0a0a'};color:${pct>=70?'#4ade80':pct>=50?'#fbbf24':'#f87171'};border-radius:4px;padding:2px 7px;font-size:10px;font-family:'JetBrains Mono',monospace`;
-  scoreTag.textContent=`${pct}%`;
-  // Show score box
-  const grade=pct>=70?'pass':pct>=50?'avg':'fail';
-  const emoji=pct>=70?'🎉':pct>=50?'👍':'📚';
-  const msg=pct>=70?'Excellent! You have a strong grasp of these concepts.':pct>=50?'Good work! Review the weaker areas and try again.':'Review the Notes and Quick Revision, then re-attempt.';
-  const tag=pct>=70?'DISTINCTION':pct>=50?'PASS':'NEEDS REVIEW';
-  document.getElementById(`mcq-submit-area-${si}`).innerHTML=`
+  localStorage.setItem('os_ch1_scores', JSON.stringify(scoreHistory));
+
+  const scoreTag = document.getElementById(`mst-score-${si}`);
+  scoreTag.style.cssText = `display:inline; background:${pct >= 70 ? '#0a2e18' : pct >= 50 ? '#2a2000' : '#2e0a0a'}; color:${pct >= 70 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171'}; border-radius:4px; padding:2px 7px; font-size:10px; font-family:'JetBrains Mono',monospace`;
+  scoreTag.textContent = `${pct}%`;
+
+  const grade = pct >= 70 ? 'pass' : pct >= 50 ? 'avg' : 'fail';
+  const emoji = pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '📚';
+  const msg = pct >= 70 ? 'Excellent work!' : 'Keep practicing to improve your score.';
+  const tag = pct >= 70 ? 'DISTINCTION' : pct >= 50 ? 'PASS' : 'NEEDS REVIEW';
+
+  document.getElementById(`mcq-submit-area-${si}`).innerHTML = `
     <div class="score-box ${grade}">
       <div class="score-emoji">${emoji}</div>
       <div class="score-pct">${pct}%</div>
       <div class="score-msg">${correct}/${set.questions.length} correct &nbsp;—&nbsp; ${msg}</div>
-      <div class="score-tag">${tag}</div>
+      <div class="score-tag" style="background:${pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)'}; color:white">${tag}</div>
     </div>`;
 }
 
-// ═══════════════════════════════════════════════
-//  DASHBOARD
-// ═══════════════════════════════════════════════
-function renderDashboard(){
-  const el=document.getElementById('dashContent');
-  const attempted=mcqScores.filter(Boolean);
-  if(attempted.length===0){
-    el.innerHTML=`<div class="dash-empty">
-      <div class="dash-empty-icon">📊</div>
-      <h2 style="font-family:'Syne',sans-serif;color:var(--text);margin-bottom:10px">No Data Yet</h2>
-      <p style="color:var(--text2);font-size:14px">Complete at least one MCQ set to see your performance dashboard.</p>
-    </div>`;
-    return;
-  }
-  const avgScore=Math.round(attempted.reduce((a,b)=>a+b.pct,0)/attempted.length);
-  const totalCorrect=attempted.reduce((a,b)=>a+b.correct,0);
-  const totalQ=attempted.reduce((a,b)=>a+b.total,0);
-  const best=Math.max(...attempted.map(s=>s.pct));
-  const statColor=v=>v>=70?'var(--green)':v>=50?'var(--gold)':'var(--red)';
+// DASHBOARD LOGIC
+function updateDashboard() {
+  const attempted = scoreHistory.filter(s => s !== null);
+  const avg = attempted.length ? Math.round(attempted.reduce((a, b) => a + b.pct, 0) / attempted.length) : 0;
+  const setsCount = mcqScores.filter(s => s !== null).length;
+  
+  document.getElementById('stat-avg').textContent = `${avg}%`;
+  document.getElementById('stat-sets').textContent = `${setsCount}/3`;
+  document.getElementById('stat-total').textContent = attempted.reduce((a, b) => a + b.total, 0);
+  
+  let rank = 'NOVICE';
+  if (avg >= 90) rank = 'MASTER';
+  else if (avg >= 75) rank = 'EXPERT';
+  else if (avg >= 50) rank = 'STUDENT';
+  document.getElementById('stat-rank').textContent = rank;
+  document.getElementById('stat-rank').style.color = avg >= 75 ? 'var(--green)' : avg >= 50 ? 'var(--gold)' : 'var(--red)';
 
-  el.innerHTML=`
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-val" style="color:var(--accent)">${attempted.length}/3</div><div class="stat-label">SETS ATTEMPTED</div></div>
-      <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-val" style="color:${statColor(avgScore)}">${avgScore}%</div><div class="stat-label">AVERAGE SCORE</div></div>
-      <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--cyan)">${totalCorrect}/${totalQ}</div><div class="stat-label">QUESTIONS RIGHT</div></div>
-      <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-val" style="color:var(--gold)">${best}%</div><div class="stat-label">BEST SCORE</div></div>
-    </div>
-    <div class="charts-grid">
-      <div class="chart-card"><div class="chart-title">📊 Score by Set</div><canvas id="barChart" height="180"></canvas></div>
-      <div class="chart-card"><div class="chart-title">🎯 Correct vs Wrong</div><canvas id="doughChart" height="180"></canvas></div>
-      ${scoreHistory.length>1?`<div class="chart-card" style="grid-column:1/-1"><div class="chart-title">📈 Score History (All Attempts)</div><canvas id="lineChart" height="120"></canvas></div>`:''}
-    </div>
-    <div class="insights-card">
-      <div class="chart-title" style="margin-bottom:14px">💡 Insights & Recommendations</div>
-      ${buildInsights(avgScore,attempted)}
-    </div>`;
+  renderChart();
+  document.getElementById('insight-container').innerHTML = generateInsights(avg, attempted);
+}
 
-  // Bar chart
-  setTimeout(()=>{
-    const barCtx=document.getElementById('barChart').getContext('2d');
-    if(dashCharts.bar) dashCharts.bar.destroy();
-    dashCharts.bar=new Chart(barCtx,{
-      type:'bar',
-      data:{
-        labels:['Set A','Set B','Set C'],
-        datasets:[{
-          label:'Score %',
-          data:MCQ_SETS.map((_,i)=>mcqScores[i]?.pct||0),
-          backgroundColor:MCQ_SETS.map((_,i)=>mcqScores[i]?`rgba(59,130,246,0.7)`:'rgba(30,40,60,0.7)'),
-          borderColor:MCQ_SETS.map((_,i)=>mcqScores[i]?'#3b82f6':'#1e2840'),
-          borderWidth:1,borderRadius:6
-        }]
-      },
-      options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>`${v.raw}%`}}},scales:{y:{max:100,min:0,ticks:{color:'#64748b',callback:v=>v+'%'},grid:{color:'#1e2840'}},x:{ticks:{color:'#64748b'},grid:{display:false}}}}
-    });
-    // Dough chart
-    const doughCtx=document.getElementById('doughChart').getContext('2d');
-    if(dashCharts.dough) dashCharts.dough.destroy();
-    dashCharts.dough=new Chart(doughCtx,{
-      type:'doughnut',
-      data:{
-        labels:['Correct','Wrong'],
-        datasets:[{data:[totalCorrect,totalQ-totalCorrect],backgroundColor:['rgba(16,185,129,0.8)','rgba(239,68,68,0.8)'],borderColor:['#10b981','#ef4444'],borderWidth:1}]
-      },
-      options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8',font:{size:12}}},tooltip:{callbacks:{label:v=>`${v.label}: ${v.raw}`}}},cutout:'65%'}
-    });
-    // Line chart
-    if(scoreHistory.length>1){
-      const lineCtx=document.getElementById('lineChart').getContext('2d');
-      if(dashCharts.line) dashCharts.line.destroy();
-      dashCharts.line=new Chart(lineCtx,{
-        type:'line',
-        data:{
-          labels:scoreHistory.map((_,i)=>`Attempt ${i+1}`),
-          datasets:[{label:'Score %',data:scoreHistory.map(s=>s.pct),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.1)',fill:true,tension:0.4,pointBackgroundColor:'#3b82f6',pointRadius:4}]
-        },
-        options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{max:100,min:0,ticks:{color:'#64748b',callback:v=>v+'%'},grid:{color:'#1e2840'}},x:{ticks:{color:'#64748b'},grid:{display:false}}}}
-      });
+function renderChart() {
+  const ctx = document.getElementById('scoreChart').getContext('2d');
+  if (chart) chart.destroy();
+
+  const labels = scoreHistory.map((s, i) => `Try ${i + 1}`);
+  const data = scoreHistory.map(s => s.pct);
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels.length ? labels : ['No Data'],
+      datasets: [{
+        label: 'Score %',
+        data: data.length ? data : [0],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 3,
+        pointBackgroundColor: '#3b82f6',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+        x: { grid: { display: false }, ticks: { color: '#64748b' } }
+      }
     }
-  },100);
+  });
 }
 
-function buildInsights(avg,attempted){
-  const insights=[];
-  if(avg>=80) insights.push({icon:'🌟',text:'Outstanding performance! You have excellent mastery of Chapter 1 concepts.',color:'var(--green)'});
-  else if(avg>=60) insights.push({icon:'👍',text:'Good work! Focus on revising kernel architectures and system call categories to push past 80%.',color:'var(--gold)'});
-  else insights.push({icon:'📚',text:'More review needed. Work through the Detailed Notes section, especially OS Types and Kernel Architectures.',color:'var(--red)'});
-  if(attempted.length<3) insights.push({icon:'📝',text:`Complete ${3-attempted.length} more MCQ set(s) to unlock full insights and see your complete performance radar.`,color:'var(--accent2)'});
-  const lowest=attempted.reduce((a,b)=>a.pct<b.pct?a:b,{pct:101});
-  if(lowest.pct<60) insights.push({icon:'⚠️',text:`Set ${['A','B','C'][lowest.set]} scored below 60%. Try the Quick Revision cards for that topic area first, then re-attempt.`,color:'var(--gold)'});
-  if(avg===100) insights.push({icon:'🎓',text:'Perfect score! You are ready for Chapter 2. Ask Claude to build the next chapter study module!',color:'var(--cyan)'});
-  return insights.map(ins=>`<div class="insight-item" style="background:var(--bg3);color:${ins.color}"><span style="font-size:18px;flex-shrink:0">${ins.icon}</span><span>${ins.text}</span></div>`).join('');
+function generateInsights(avg, attempted) {
+  if (attempted.length === 0) return `<div style="text-align:center; padding:40px; color:var(--text3)">Complete at least one MCQ set to see personalized feedback here.</div>`;
+
+  let insights = [];
+  if (avg >= 85) insights.push({ icon: '🌟', text: 'Outstanding performance! You have excellent mastery of Chapter 1 concepts.', color: 'var(--green)' });
+  else if (avg >= 60) insights.push({ icon: '👍', text: 'Good work! Focus on revising kernel architectures and system call categories to push past 80%.', color: 'var(--gold)' });
+  else insights.push({ icon: '📚', text: 'More review needed. Work through the Detailed Notes section, especially OS Types and Kernel Architectures.', color: 'var(--red)' });
+
+  if (mcqScores.filter(s => s !== null).length < 3) insights.push({ icon: '📝', text: `Complete ${3 - mcqScores.filter(s => s !== null).length} more MCQ set(s) to unlock full insights.`, color: 'var(--accent2)' });
+
+  return insights.map(ins => `<div class="insight-item" style="background:var(--bg3);color:${ins.color}"><span style="font-size:18px;flex-shrink:0">${ins.icon}</span><span>${ins.text}</span></div>`).join('');
 }
 
-// ═══════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════
-buildSidebar();
-renderNote(NOTES[0]);
-buildRevision();
-buildQA();
-buildMCQ();
+function resetProgress() {
+  if (confirm('Are you sure you want to clear all scores and progress?')) {
+    localStorage.removeItem('os_ch1_scores');
+    scoreHistory = [];
+    mcqState = [[], [], []];
+    mcqSubmitted = [false, false, false];
+    mcqScores = [null, null, null];
+    initMCQs();
+    updateDashboard();
+    showView('dashboard');
+  }
+}
 </script>
 </body>
 </html>
